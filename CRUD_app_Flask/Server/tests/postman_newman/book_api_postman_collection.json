@@ -1,0 +1,1340 @@
+{
+  "info": {
+    "name": "Book CRUD API - Comprehensive Test Collection",
+    "_postman_id": "book-crud-api-comprehensive",
+    "description": "Postman collection that implements the requested test plan (Sections 1-9).\n\nBase URL is set via the environment variable {{base_url}} (default: http://127.0.0.1:5000).\n\nNotes:\n- Some test cases require environment/system changes (e.g., stopping PostgreSQL). For those tests the request contains a failing assertion with a helpful message if the environment is not prepared.\n- CORS checks and server-start checks are partially verified here (CORS header presence, /health status).\n- For DB-down or disk-full scenarios you must simulate the condition (stop DB or change DB config) before running the request.\n\nImported from: Flasgger API spec provided by user.\nGenerated: 2025-10-09T11:59:12.701572Z",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5000"
+    },
+    {
+      "key": "created_book_id",
+      "value": ""
+    },
+    {
+      "key": "non_existing_id",
+      "value": "999999"
+    },
+    {
+      "key": "test_publisher",
+      "value": "O'Reilly"
+    },
+    {
+      "key": "test_name",
+      "value": "Flask101"
+    },
+    {
+      "key": "test_date",
+      "value": "2025-01-01"
+    },
+    {
+      "key": "test_cost",
+      "value": "49.99"
+    }
+  ],
+  "item": [
+    {
+      "name": "SECTION 1 - Basic Functional Tests",
+      "item": [
+        {
+          "name": "Server Start Check (root) - verify server responds",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Check that the server responds at the base URL. If Flask is not started this will fail to connect."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Server responds (any 2xx or 3xx)', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200,201,202,203,204,301,302,304]);",
+                  "});",
+                  "",
+                  "pm.test('Content-Type is application/json when present', function () {",
+                  "    if (pm.response.headers.has('Content-Type')) {",
+                  "        pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+                  "    } else {",
+                  "        pm.skip('No Content-Type header present');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "CORS check - looks for Access-Control-Allow-Origin header",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Origin",
+                "value": "http://example.com"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Sends Origin header and checks for Access-Control-Allow-Origin in response headers."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Health endpoint returns 200 or 503', function () {",
+                  "    pm.expect([200,503]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('CORS header present (Access-Control-Allow-Origin)', function () {",
+                  "    if (pm.response.headers.has('Access-Control-Allow-Origin')) {",
+                  "        pm.expect(pm.response.headers.get('Access-Control-Allow-Origin')).to.be.a('string');",
+                  "    } else {",
+                  "        pm.fail('CORS header Access-Control-Allow-Origin not present \u2014 ensure CORS is enabled on server');",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Health check - healthy DB (expect 200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Expect 200 and JSON {status: 'healthy'} when DB is up."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200 OK', function () {",
+                  "    pm.expect(pm.response.code).to.equal(200);",
+                  "});",
+                  "",
+                  "pm.test('Response is JSON and contains status field', function () {",
+                  "    pm.response.to.have.header('Content-Type');",
+                  "    var json = {};",
+                  "    try { json = pm.response.json(); } catch(e) { pm.expect.fail('Response is not JSON'); }",
+                  "    pm.expect(json).to.have.property('status');",
+                  "    pm.expect(json.status).to.be.oneOf(['healthy','ok','Healthy','OK']);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Health check - DB down (must simulate by stopping DB before running)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Simulate DB down by stopping PostgreSQL. This test expects HTTP 503. If DB is up the test will fail with an instructive message."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 503) {",
+                  "    pm.test('DB down - returned 503 as expected', function () { pm.expect(pm.response.code).to.equal(503); });",
+                  "} else {",
+                  "    pm.test('DB down test not executed - DB appears up', function () {",
+                  "        pm.expect.fail('Database is up. To validate this test, stop PostgreSQL and re-run this request. Received status: ' + pm.response.code);",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fetch all books - expect JSON array (200)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Retrieve all books. When DB has data returns array of objects, when empty returns []."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.expect(pm.response.code).to.equal(200); });",
+                  "pm.test('Response is JSON array', function () {",
+                  "    var json = [];",
+                  "    try { json = pm.response.json(); } catch(e) { pm.expect.fail('Response not JSON'); }",
+                  "    pm.expect(json).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Fetch all books - empty DB (manual prepare: truncate book table)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Before running this request manually truncate the book table. Expect [] and 200 OK."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.expect(pm.response.code).to.equal(200); });",
+                  "pm.test('Response is JSON array (possibly empty)', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json).to.be.an('array');",
+                  "    pm.test('Array empty as requested', function () {",
+                  "        // This will fail if DB wasn't truncated - instruct user to truncate if not empty",
+                  "        if (json.length !== 0) { pm.expect.fail('DB not empty. To validate this test truncate the book table before running.'); }",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SECTION 2 - Create Book API (Positive & Validation Tests)",
+      "item": [
+        {
+          "name": "Create - Valid book (positive)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"Flask101\", \"date\": \"2025-01-01\", \"Cost\": 49.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Creates a valid book. Stores created id into {{created_book_id}} for later use (if response returns id)."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// No pre-req"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 201 Created', function () {",
+                  "    pm.expect(pm.response.code).to.equal(201);",
+                  "});",
+                  "",
+                  "pm.test('Response is JSON and echoes fields', function () {",
+                  "    var json = {};",
+                  "    try { json = pm.response.json(); } catch(e) { pm.expect.fail('Response not JSON'); }",
+                  "    pm.expect(json).to.have.property('publisher');",
+                  "    pm.expect(json).to.have.property('name');",
+                  "    pm.expect(json).to.have.property('date');",
+                  "    pm.expect(json).to.have.property('Cost');",
+                  "});",
+                  "",
+                  "// If server returns an id, save it to an environment variable for subsequent tests",
+                  "try {",
+                  "    var j = pm.response.json();",
+                  "    if (j.id) { pm.environment.set('created_book_id', j.id); }",
+                  "} catch(e) {}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create - Missing required field (publisher)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"Flask101\", \"date\": \"2025-01-01\", \"Cost\": 49.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Omit publisher field. Expect 400 with error message about missing field."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 400 Bad Request', function () {",
+                  "    pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "pm.test('Error mentions missing publisher', function () {",
+                  "    var json = {};",
+                  "    try { json = pm.response.json(); } catch(e) { pm.expect.fail('Response not JSON'); }",
+                  "    pm.expect(JSON.stringify(json).toLowerCase()).to.include('publisher');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create - Invalid cost type",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"2025-01-01\", \"Cost\": \"abc\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Cost as string should validate and return 400."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400 for invalid cost', function () { pm.expect(pm.response.code).to.equal(400); });",
+                  "pm.test('Error mentions cost or numeric', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(JSON.stringify(json).toLowerCase()).to.satisfy(function(s) {",
+                  "        return s.includes('cost') || s.includes('numeric') || s.includes('invalid');",
+                  "    });",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create - Invalid date format",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"32-13-2025\", \"Cost\": 39.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Invalid date format should return a 400 and helpful error."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 400 for invalid date format', function () { pm.expect(pm.response.code).to.equal(400); });",
+                  "pm.test('Error mentions date format', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(JSON.stringify(json).toLowerCase()).to.include('date');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create - Empty body",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Empty JSON should return 400 with missing body message."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 400 for empty body', function () { pm.expect(pm.response.code).to.equal(400); });",
+                  "pm.test('Error mentions missing body', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(JSON.stringify(json).toLowerCase()).to.include('body');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create - Missing JSON header (send raw text)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "text/plain"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "hello"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "If server enforces JSON header this should return 400 with request must be JSON."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 400 when content-type not application/json', function () { pm.expect(pm.response.code).to.equal(400); });",
+                  "pm.test('Error mentions JSON', function () {",
+                  "    var txt = pm.response.text();",
+                  "    pm.expect(txt.toLowerCase()).to.include('json');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create - Extra fields (author) - server may ignore or accept",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"2025-01-01\", \"Cost\": 39.99, \"author\": \"xyz\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Extra fields may be ignored or written depending on schema. Accept either 201 or 200 with success."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 201 (created) or 200 (accepted) or 400 if validation fails', function () {",
+                  "    pm.expect([200,201,400]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('If created, response includes the extra field or ignores it', function () {",
+                  "    try { var j = pm.response.json(); if (pm.response.code===201 || pm.response.code===200) {",
+                  "        // optional check",
+                  "        if (j.author) { pm.expect(j.author).to.equal('xyz'); }",
+                  "    } } catch(e) {}",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create - Database constraint violation (duplicate name) - make name unique in DB before running",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"FLASK_DUPLICATE_TEST\", \"date\": \"2025-01-01\", \"Cost\": 39.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "To validate constraint violation, make the 'name' column unique and insert a duplicate. Expects 400 with constraint error."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 400) {",
+                  "    pm.test('Constraint violation reported', function () {",
+                  "        var j = pm.response.json();",
+                  "        pm.expect(JSON.stringify(j).toLowerCase()).to.satisfy(function(s){ return s.includes('constraint') || s.includes('duplicate') || s.includes('unique'); });",
+                  "    });",
+                  "} else {",
+                  "    pm.test('DB constraint test not validated', function () { pm.expect.fail('Server did not return 400. Ensure DB uniqueness constraint is applied and re-run. Received: ' + pm.response.code); });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SECTION 3 - Update Book API",
+      "item": [
+        {
+          "name": "Update - Valid update existing record (uses {{created_book_id}})",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"Flask101-Updated\", \"date\": \"2025-02-02\", \"Cost\": 59.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/update/{{created_book_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update",
+                "{{created_book_id}}"
+              ]
+            },
+            "description": "Update the previously created book. Ensure {{created_book_id}} is set by the Create positive test."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (!pm.environment.get('created_book_id')) { pm.test('Missing created_book_id', function(){ pm.expect.fail('created_book_id not set. Run Create (positive) first.'); }); }",
+                  "pm.test('Expect 200 OK for successful update', function() { pm.expect(pm.response.code).to.equal(200); });",
+                  "pm.test('Response mentions updated', function() { var txt = pm.response.text(); pm.expect(txt.toLowerCase()).to.include('update'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update - Non-existing ID",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"NoSuchBook\", \"date\": \"2025-01-01\", \"Cost\": 29.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/update/{{non_existing_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update",
+                "{{non_existing_id}}"
+              ]
+            },
+            "description": "Update a non-existing ID. Expected 404 with Book not found."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 404 Not Found for non-existing ID', function() { pm.expect(pm.response.code).to.equal(404); });",
+                  "pm.test('Response mentions not found', function() { var j=''; try{ j=JSON.stringify(pm.response.json()); }catch(e){ j=pm.response.text(); } pm.expect(j.toLowerCase()).to.include('not found'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update - Invalid ID format (abc)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"InvalidIDTest\", \"date\": \"2025-01-01\", \"Cost\": 29.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/update/abc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update",
+                "abc"
+              ]
+            },
+            "description": "Invalid ID format should hit Flask routing mismatch and return 404."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 404 for invalid ID format', function() { pm.expect(pm.response.code).to.equal(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update - Missing field in update (publisher)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\": \"FlaskPro\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/update/{{created_book_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update",
+                "{{created_book_id}}"
+              ]
+            },
+            "description": "Update with missing required field. Expect 400 with missing publisher error."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 400 when required publisher missing', function(){ pm.expect(pm.response.code).to.equal(400); });",
+                  "pm.test('Error mentions publisher', function(){ var j=''; try{ j=JSON.stringify(pm.response.json()); } catch(e) { j=pm.response.text(); } pm.expect(j.toLowerCase()).to.include('publisher'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update - Invalid date in update",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"FlaskBadDate\", \"date\": \"31-02-2025\", \"Cost\": 25.0}"
+            },
+            "url": {
+              "raw": "{{base_url}}/update/{{created_book_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update",
+                "{{created_book_id}}"
+              ]
+            },
+            "description": "Invalid date should return 400."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 400 for invalid date', function(){ pm.expect(pm.response.code).to.equal(400); });",
+                  "pm.test('Error mentions date', function(){ var j=''; try{ j=JSON.stringify(pm.response.json()); }catch(e){ j=pm.response.text(); } pm.expect(j.toLowerCase()).to.include('date'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update - DB down during update (stop DB before running)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"WhileDBDown\", \"date\": \"2025-01-01\", \"Cost\": 1.0}"
+            },
+            "url": {
+              "raw": "{{base_url}}/update/{{created_book_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "update",
+                "{{created_book_id}}"
+              ]
+            },
+            "description": "Stop DB before running. Expects 503. If DB is up test fails with guidance."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 503) { pm.test('Database unavailable returned 503', function(){ pm.expect(pm.response.code).to.equal(503); }); }",
+                  "else { pm.test('DB down test not executed', function(){ pm.expect.fail('Database is up. Stop PostgreSQL and re-run request to validate 503. Got: '+pm.response.code); }); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SECTION 4 - Delete Book API",
+      "item": [
+        {
+          "name": "Delete - Valid book (uses {{created_book_id}})",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/delete/{{created_book_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "delete",
+                "{{created_book_id}}"
+              ]
+            },
+            "description": "Delete the book created earlier. Ensure created_book_id is set."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (!pm.environment.get('created_book_id')) { pm.test('Missing created_book_id', function(){ pm.expect.fail('created_book_id not set. Run Create (positive) first.'); }); }",
+                  "pm.test('Expect 200 OK for successful delete', function(){ pm.expect(pm.response.code).to.equal(200); });",
+                  "pm.test('Response mentions deleted', function(){ pm.expect(pm.response.text().toLowerCase()).to.include('deleted'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete - Non-existing ID",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/delete/{{non_existing_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "delete",
+                "{{non_existing_id}}"
+              ]
+            },
+            "description": "Deleting a non-existing ID should return 404 and an error message."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 404 for non-existing ID', function(){ pm.expect(pm.response.code).to.equal(404); });",
+                  "pm.test('Response mentions not found', function(){ pm.expect(pm.response.text().toLowerCase()).to.include('not found'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete - Invalid ID type (abc)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/delete/abc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "delete",
+                "abc"
+              ]
+            },
+            "description": "Invalid ID type should return 404 from Flask routing."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 404 for invalid ID type', function(){ pm.expect(pm.response.code).to.equal(404); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete - DB connection down (stop DB before running)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/delete/{{created_book_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "delete",
+                "{{created_book_id}}"
+              ]
+            },
+            "description": "Stop DB before running. Expect 503."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 503) { pm.test('Database unavailable returned 503', function(){ pm.expect(pm.response.code).to.equal(503); }); }",
+                  "else { pm.test('DB down test not executed', function(){ pm.expect.fail('Database is up. Stop PostgreSQL and re-run request to validate 503. Got: '+pm.response.code); }); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "SECTION 5-9 - System, Errors, Operational & Contract Checks",
+      "item": [
+        {
+          "name": "DB connection failure - change env base_url to invalid host before running",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "To simulate change DB host, adjust server DB config. Postman cannot change DB host remotely \u2014 run after changing server config or run against a server configured with invalid DB host."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 503) { pm.test('Database unavailable returned 503', function(){ pm.expect(pm.response.code).to.equal(503); }); }",
+                  "else { pm.test('DB connection failure not reproduced', function(){ pm.expect.fail('Expected 503 when DB host invalid. Ensure server is configured to use invalid DB host and re-run. Received: '+pm.response.code); }); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Unhandled Python exception simulation (modify server route to raise Exception)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/some-route-that-raises",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "some-route-that-raises"
+              ]
+            },
+            "description": "To validate global exception handling temporarily modify server to raise an exception for this route. Expect 500 and a JSON error."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 500 when server raises unhandled exception', function(){ pm.expect([500,502,503]).to.include(pm.response.code); });",
+                  "pm.test('Response contains JSON error field', function(){ try{ var j=pm.response.json(); pm.expect(j).to.have.property('error'); } catch(e) { pm.expect.fail('Response not JSON with error'); } });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "JSON decoding error - send malformed JSON",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"publisher\": \"Packt\", }"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Sends malformed JSON. Server should return an error (400 or 500) handled globally."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 4xx or 5xx for malformed JSON', function(){ pm.expect(pm.response.code).to.be.above(399); });",
+                  "pm.test('Response mentions JSON parse or error', function(){ var txt = pm.response.text().toLowerCase(); pm.expect(txt).to.satisfy(function(s){ return s.includes('json') || s.includes('parse') || s.includes('error'); }); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Missing route - GET /unknown",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/unknown",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "unknown"
+              ]
+            },
+            "description": "Hit a missing route. Expect 404 and JSON error message or HTML 404 depending on app configuration."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 404 Not Found', function(){ pm.expect(pm.response.code).to.equal(404); });",
+                  "pm.test('If JSON returned it should contain error key', function(){ try{ var j=pm.response.json(); pm.expect(j).to.have.property('error'); } catch(e){ pm.test('Response not JSON - likely HTML 404', function(){ pm.expect(pm.response.code).to.equal(404); }); } });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Invalid HTTP method - PATCH /create (expect 405)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"x\"}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "PATCH is not allowed on /create; expect 405 Method Not Allowed or 404 depending on Flask configuration."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Expect 405 or 404 for invalid method', function(){ pm.expect([404,405]).to.include(pm.response.code); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "API contract & consistency - check headers and JSON for GET / and /health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Verifies Content-Type header and JSON format for a representative endpoint."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Content-Type header includes application/json', function(){ pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json'); });",
+                  "pm.test('Response is valid JSON', function(){ try{ pm.response.json(); } catch(e){ pm.expect.fail('Response not valid JSON'); } });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Schema Validation Tests",
+      "item": [
+        {
+          "name": "Schema - Health endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Validate /health response against schema: {status: string}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var healthSchema = {",
+                  "  'type': 'object',",
+                  "  'properties': { 'status': { 'type': 'string' } },",
+                  "  'required': ['status']",
+                  "};",
+                  "pm.test('Health response matches schema', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(tv4.validate(json, healthSchema)).to.be.true;",
+                  "  if (!tv4.validate(json, healthSchema)) {",
+                  "    console.log(tv4.error);",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Schema - Get all books (array of book objects)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Validate GET / returns an array of book objects"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var booksSchema = {",
+                  "  'type': 'array',",
+                  "  'items': {",
+                  "    'type': 'object',",
+                  "    'properties': {",
+                  "      'id': { 'type': ['integer','number','null'] },",
+                  "      'publisher': { 'type': 'string' },",
+                  "      'name': { 'type': 'string' },",
+                  "      'date': { 'type': 'string' },",
+                  "      'Cost': { 'type': ['number','integer'] }",
+                  "    },",
+                  "    'required': ['publisher','name','date','Cost']",
+                  "  }",
+                  "};",
+                  "pm.test('Books response matches schema', function() {",
+                  "  var json = pm.response.json();",
+                  "  pm.expect(tv4.validate(json, booksSchema)).to.be.true;",
+                  "  if (!tv4.validate(json, booksSchema)) { console.log(tv4.error); }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Schema - Create book response (object)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"SchemaTestBook\", \"date\": \"2025-01-01\", \"Cost\": 9.99}"
+            },
+            "url": {
+              "raw": "{{base_url}}/create",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "create"
+              ]
+            },
+            "description": "Validate POST /create response conforms to the created book object schema."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var bookSchema = {",
+                  "  'type': 'object',",
+                  "  'properties': {",
+                  "    'id': { 'type': ['integer','number'] },",
+                  "    'publisher': { 'type': 'string' },",
+                  "    'name': { 'type': 'string' },",
+                  "    'date': { 'type': 'string' },",
+                  "    'Cost': { 'type': ['number','integer'] }",
+                  "  },",
+                  "  'required': ['publisher','name','date','Cost']",
+                  "};",
+                  "pm.test('Create response matches book schema', function() {",
+                  "  try { var json = pm.response.json(); } catch(e) { pm.expect.fail('Response not JSON'); }",
+                  "  pm.expect(tv4.validate(json, bookSchema)).to.be.true;",
+                  "  if (!tv4.validate(json, bookSchema)) { console.log(tv4.error); }",
+                  "});",
+                  "",
+                  "// Save created id if present",
+                  "try { var j = pm.response.json(); if (j.id) { pm.environment.set('created_book_id', j.id); } } catch(e) {}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

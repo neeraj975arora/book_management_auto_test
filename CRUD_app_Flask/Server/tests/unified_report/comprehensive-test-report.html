@@ -1,0 +1,907 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Book CRUD API - Comprehensive Test Report</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; 
+               margin: 40px auto; max-width: 1200px; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                  color: white; padding: 25px; border-radius: 8px; margin-bottom: 30px; text-align: center; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: #fff; border: 1px solid #e1e5e9; border-radius: 8px; 
+                     padding: 20px; text-align: center; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .success { border-left: 5px solid #28a745; }
+        .error { border-left: 5px solid #dc3545; }
+        .warning { border-left: 5px solid #ffc107; }
+        .info { border-left: 5px solid #17a2b8; }
+        .metric { font-size: 28px; font-weight: 700; margin: 10px 0; }
+        .metric.success { color: #28a745; }
+        .metric.error { color: #dc3545; }
+        .metric.warning { color: #ffc107; }
+        .metric.info { color: #17a2b8; }
+        .section { margin: 40px 0; }
+        .section-title { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: #495057; 
+                        border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+        .test-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .test-table th, .test-table td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        .test-table th { background: #f8f9fa; font-weight: 600; color: #495057; }
+        .test-table tbody tr:hover { background: #f8f9fa; }
+        .status-automated { background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .status-manual { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .status-not-automated { background: #f8d7da; color: #721c24; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .failure-item { background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 6px; 
+                       padding: 20px; margin: 15px 0; border-left: 5px solid #dc3545; }
+        .failure-tc { font-weight: 600; color: #721c24; margin-bottom: 8px; }
+        .failure-test { font-weight: 500; margin-bottom: 5px; }
+        .failure-assertion { font-style: italic; color: #856404; margin-bottom: 5px; }
+        .failure-message { font-size: 14px; color: #6c757d; }
+        .timestamp { color: #6c757d; font-size: 14px; }
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-danger { background: #f8d7da; color: #721c24; }
+        .progress-bar { width: 100%; height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.3s ease; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Book CRUD API - Comprehensive Test Report</h1>
+            <p class="timestamp">Generated: 2025-10-14 12:19:30</p>
+            <p>Complete test analysis with TC mapping and manual test tracking</p>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🎯 Newman Test Execution Summary</h2>
+            <div class="stats">
+                <div class="stat-card success">
+                    <div class="metric success">37</div>
+                    <div><strong>Passed Assertions</strong></div>
+                </div>
+                <div class="stat-card error">
+                    <div class="metric error">21</div>
+                    <div><strong>Failed Assertions</strong></div>
+                </div>
+                <div class="stat-card info">
+                    <div class="metric info">63.8%</div>
+                    <div><strong>Success Rate</strong></div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="metric warning">33</div>
+                    <div><strong>API Endpoints Tested</strong></div>
+                </div>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <div><strong>Test Execution Progress:</strong></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 63.8%;"></div>
+                </div>
+                <small style="color: #6c757d;">37/58 assertions passed</small>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 class="section-title">🧪 Pytest Unit Test Summary</h2>
+            <div class="stats">
+                <div class="stat-card success">
+                    <div class="metric success">13</div>
+                    <div><strong>Passed Tests</strong></div>
+                </div>
+                <div class="stat-card error">
+                    <div class="metric error">1</div>
+                    <div><strong>Failed Tests</strong></div>
+                </div>
+                <div class="stat-card info">
+                    <div class="metric info">92.9%</div>
+                    <div><strong>Unit Test Success Rate</strong></div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="metric warning">14</div>
+                    <div><strong>Total Unit Tests</strong></div>
+                </div>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <div><strong>Unit Test Execution Progress:</strong></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92.9%;"></div>
+                </div>
+                <small style="color: #6c757d;">13/14 unit tests passed</small>
+            </div>
+        </div>
+
+        
+        <div class="section">
+            <h2 class="section-title">📋 Test Plan Coverage Analysis</h2>
+            <div class="stats">
+                <div class="stat-card success">
+                    <div class="metric success">0</div>
+                    <div><strong>Automated TCs</strong></div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="metric warning">10</div>
+                    <div><strong>Manual Required</strong></div>
+                </div>
+                <div class="stat-card error">
+                    <div class="metric error">34</div>
+                    <div><strong>Not Automated</strong></div>
+                </div>
+                <div class="stat-card info">
+                    <div class="metric info">0.0%</div>
+                    <div><strong>Automation Coverage</strong></div>
+                </div>
+            </div>
+            
+            <div style="margin: 20px 0;">
+                <div><strong>Automation Coverage Progress:</strong></div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0.0%;"></div>
+                </div>
+                <small style="color: #6c757d;">0/44 test cases automated</small>
+            </div>
+        </div>
+
+        
+        <div class="section">
+            <h2 class="section-title">📝 Detailed Test Case Status</h2>
+            <table class="test-table">
+                <thead>
+                    <tr>
+                        <th>TC No</th>
+                        <th>Category</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Automation Result</th>
+                        <th>Newman Test</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td><strong>TC01</strong></td>
+                        <td>Basic Functional</td>
+                        <td>Server Start Check</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC02</strong></td>
+                        <td>Basic Functional</td>
+                        <td>CORS Check</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC03</strong></td>
+                        <td>Basic Functional</td>
+                        <td>Health Check - DB Up</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC04</strong></td>
+                        <td>Basic Functional</td>
+                        <td>Health Check - DB Down</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC05</strong></td>
+                        <td>CRUD Operations</td>
+                        <td>Get All Books - Empty</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC06</strong></td>
+                        <td>CRUD Operations</td>
+                        <td>Get All Books - With Data</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC07</strong></td>
+                        <td>Create Book</td>
+                        <td>Create Valid Book</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC08</strong></td>
+                        <td>Create Book</td>
+                        <td>Create Missing Publisher</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC09</strong></td>
+                        <td>Create Book</td>
+                        <td>Create Invalid Cost</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC10</strong></td>
+                        <td>Create Book</td>
+                        <td>Create Invalid Date</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC11</strong></td>
+                        <td>Create Book</td>
+                        <td>Create Empty Body</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC12</strong></td>
+                        <td>Create Book</td>
+                        <td>Create Non-JSON</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC13</strong></td>
+                        <td>Create Book</td>
+                        <td>Create Extra Fields</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC14</strong></td>
+                        <td>Create Book</td>
+                        <td>Duplicate Book Name</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC15</strong></td>
+                        <td>Update Book</td>
+                        <td>Update Valid Book</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC16</strong></td>
+                        <td>Update Book</td>
+                        <td>Update Non-Existing ID</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC17</strong></td>
+                        <td>Update Book</td>
+                        <td>Update Invalid ID</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC18</strong></td>
+                        <td>Update Book</td>
+                        <td>Update Missing Publisher</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC19</strong></td>
+                        <td>Update Book</td>
+                        <td>Update Invalid Date</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC20</strong></td>
+                        <td>Update Book</td>
+                        <td>Update DB Down</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC21</strong></td>
+                        <td>Delete Book</td>
+                        <td>Delete Valid Book</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC22</strong></td>
+                        <td>Delete Book</td>
+                        <td>Delete Non-Existing ID</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC23</strong></td>
+                        <td>Delete Book</td>
+                        <td>Delete Invalid ID</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC24</strong></td>
+                        <td>Delete Book</td>
+                        <td>Delete DB Down</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC25</strong></td>
+                        <td>Error Handling</td>
+                        <td>DB Connection Failure</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC26</strong></td>
+                        <td>Error Handling</td>
+                        <td>Unhandled Exception</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC27</strong></td>
+                        <td>Error Handling</td>
+                        <td>Malformed JSON</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC28</strong></td>
+                        <td>Error Handling</td>
+                        <td>Missing Route</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC29</strong></td>
+                        <td>Error Handling</td>
+                        <td>Invalid HTTP Method</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC30</strong></td>
+                        <td>API Contract</td>
+                        <td>Content-Type Consistency</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC31</strong></td>
+                        <td>Schema Validation</td>
+                        <td>Health Endpoint Schema</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC32</strong></td>
+                        <td>Schema Validation</td>
+                        <td>Books List Schema</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC33</strong></td>
+                        <td>Schema Validation</td>
+                        <td>Create Response Schema</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC34</strong></td>
+                        <td>Performance</td>
+                        <td>Response Time - Health</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC35</strong></td>
+                        <td>Performance</td>
+                        <td>Response Time - Get Books</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC36</strong></td>
+                        <td>Performance</td>
+                        <td>Response Time - Create</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC37</strong></td>
+                        <td>Security</td>
+                        <td>SQL Injection - Name</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC38</strong></td>
+                        <td>Security</td>
+                        <td>SQL Injection - Publisher</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC39</strong></td>
+                        <td>Data Validation</td>
+                        <td>Date Range Validation</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC40</strong></td>
+                        <td>Data Validation</td>
+                        <td>Cost Range Validation</td>
+                        <td>
+                            
+                                <span class="status-not-automated">❌ Not Automated</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC41</strong></td>
+                        <td>System Integration</td>
+                        <td>Database Transaction</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC42</strong></td>
+                        <td>System Integration</td>
+                        <td>Concurrent Operations</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC43</strong></td>
+                        <td>Data Integrity</td>
+                        <td>Foreign Key Constraints</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><strong>TC44</strong></td>
+                        <td>Operational</td>
+                        <td>Log File Generation</td>
+                        <td>
+                            
+                                <span class="status-manual">⚠️ Manual Required</span>
+                            
+                        </td>
+                        <td></td>
+                        <td><small></small></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        
+        
+
+        
+        <div class="section">
+            <h2 class="section-title">❌ Failed Test Details</h2>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Health check - DB down (must simulate by stopping DB before running)</div>
+                <div class="failure-assertion"><em>Assertion:</em> DB down test not executed - DB appears up</div>
+                <div class="failure-message"><em>Error:</em> Database is up. To validate this test, stop PostgreSQL and re-run this request. Received status: 200</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Fetch all books - empty DB (manual prepare: truncate book table)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Array empty as requested</div>
+                <div class="failure-message"><em>Error:</em> DB not empty. To validate this test truncate the book table before running.</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Create - Valid book (positive)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Response is JSON and echoes fields</div>
+                <div class="failure-message"><em>Error:</em> expected { data: { Cost: 49.99, …(3) }, …(1) } to have property 'publisher'</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Create - Database constraint violation (duplicate name) - make name unique in DB before running</div>
+                <div class="failure-assertion"><em>Assertion:</em> DB constraint test not validated</div>
+                <div class="failure-message"><em>Error:</em> Server did not return 400. Ensure DB uniqueness constraint is applied and re-run. Received: 201</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - Valid update existing record (uses {{created_book_id}})</div>
+                <div class="failure-assertion"><em>Assertion:</em> Missing created_book_id</div>
+                <div class="failure-message"><em>Error:</em> created_book_id not set. Run Create (positive) first.</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - Valid update existing record (uses {{created_book_id}})</div>
+                <div class="failure-assertion"><em>Assertion:</em> Expect 200 OK for successful update</div>
+                <div class="failure-message"><em>Error:</em> expected 404 to equal 200</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - Valid update existing record (uses {{created_book_id}})</div>
+                <div class="failure-assertion"><em>Assertion:</em> Response mentions updated</div>
+                <div class="failure-message"><em>Error:</em> expected '{\n  "error": "resource not found"\n}…' to include 'update'</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - Missing field in update (publisher)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Expect 400 when required publisher missing</div>
+                <div class="failure-message"><em>Error:</em> expected 404 to equal 400</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - Missing field in update (publisher)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Error mentions publisher</div>
+                <div class="failure-message"><em>Error:</em> expected '{"error":"resource not found"}' to include 'publisher'</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - Invalid date in update</div>
+                <div class="failure-assertion"><em>Assertion:</em> Expect 400 for invalid date</div>
+                <div class="failure-message"><em>Error:</em> expected 404 to equal 400</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - Invalid date in update</div>
+                <div class="failure-assertion"><em>Assertion:</em> Error mentions date</div>
+                <div class="failure-message"><em>Error:</em> expected '{"error":"resource not found"}' to include 'date'</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Update - DB down during update (stop DB before running)</div>
+                <div class="failure-assertion"><em>Assertion:</em> DB down test not executed</div>
+                <div class="failure-message"><em>Error:</em> Database is up. Stop PostgreSQL and re-run request to validate 503. Got: 404</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Delete - Valid book (uses {{created_book_id}})</div>
+                <div class="failure-assertion"><em>Assertion:</em> Missing created_book_id</div>
+                <div class="failure-message"><em>Error:</em> created_book_id not set. Run Create (positive) first.</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Delete - Valid book (uses {{created_book_id}})</div>
+                <div class="failure-assertion"><em>Assertion:</em> Expect 200 OK for successful delete</div>
+                <div class="failure-message"><em>Error:</em> expected 404 to equal 200</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Delete - Valid book (uses {{created_book_id}})</div>
+                <div class="failure-assertion"><em>Assertion:</em> Response mentions deleted</div>
+                <div class="failure-message"><em>Error:</em> expected '{\n  "error": "resource not found"\n}…' to include 'deleted'</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Delete - DB connection down (stop DB before running)</div>
+                <div class="failure-assertion"><em>Assertion:</em> DB down test not executed</div>
+                <div class="failure-message"><em>Error:</em> Database is up. Stop PostgreSQL and re-run request to validate 503. Got: 404</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">DB connection failure - change env base_url to invalid host before running</div>
+                <div class="failure-assertion"><em>Assertion:</em> DB connection failure not reproduced</div>
+                <div class="failure-message"><em>Error:</em> Expected 503 when DB host invalid. Ensure server is configured to use invalid DB host and re-run. Received: 200</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Unhandled Python exception simulation (modify server route to raise Exception)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Expect 500 when server raises unhandled exception</div>
+                <div class="failure-message"><em>Error:</em> expected [ 500, 502, 503 ] to include 404</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Invalid HTTP method - PATCH /create (expect 405)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Expect 405 or 404 for invalid method</div>
+                <div class="failure-message"><em>Error:</em> expected [ 404, 405 ] to include 500</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Schema - Get all books (array of book objects)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Books response matches schema</div>
+                <div class="failure-message"><em>Error:</em> expected false to be true</div>
+            </div>
+            
+            <div class="failure-item">
+                <div class="failure-tc"><strong>N/A</strong> - Test Case</div>
+                <div class="failure-test">Schema - Create book response (object)</div>
+                <div class="failure-assertion"><em>Assertion:</em> Create response matches book schema</div>
+                <div class="failure-message"><em>Error:</em> expected false to be true</div>
+            </div>
+            
+        </div>
+        
+
+        
+
+        <div class="section" style="text-align: center; margin-top: 50px; padding-top: 30px; border-top: 1px solid #dee2e6;">
+            <p style="color: #6c757d; font-size: 14px; margin: 0;">
+                <em>Comprehensive report generated by test-report-generator.py</em><br>
+                <small>Newman 58 assertions | 44 total test cases | Generated 2025-10-14 12:19:30</small>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

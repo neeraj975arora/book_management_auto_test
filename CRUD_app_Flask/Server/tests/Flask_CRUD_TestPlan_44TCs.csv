@@ -1,0 +1,45 @@
+TC No,Category,Description,Input/Setup,Expected Result,Actual Result,Pass/Fail,Comments
+TC01,Basic Functional,Server Start Check,GET /,Server responds with 200/3xx,Server responds,Pass,Basic connectivity verified
+TC02,Basic Functional,CORS Check,GET /health with Origin header,Access-Control-Allow-Origin present,CORS enabled,Pass,Cross-origin requests supported
+TC03,Basic Functional,Health Check - DB Up,GET /health,Returns 200 with status healthy,Returns healthy status,Pass,Database connection verified
+TC04,Basic Functional,Health Check - DB Down,Stop DB then GET /health,Returns 503 with status unhealthy,Manual test required,Manual,Requires DB shutdown
+TC05,CRUD Operations,Get All Books - Empty,GET / with empty table,Returns 200 with empty array,[],Pass,Empty state handled correctly
+TC06,CRUD Operations,Get All Books - With Data,GET / with books in table,Returns 200 with book array,Returns book list,Pass,Data retrieval works
+TC07,Create Book,Create Valid Book,POST /create with valid JSON,Returns 201 with book data,Book created successfully,Pass,Valid creation flowUse a unified test-reporting framework to merge Newman automated results.
+TC08,Create Book,Create Missing Publisher,POST /create without publisher,Returns 400 with error message,Missing field error,Pass,Field validation works
+TC09,Create Book,Create Invalid Cost,POST /create with non-numeric cost,Returns 400 with cost error,Invalid cost error,Pass,Type validation works
+TC10,Create Book,Create Invalid Date,POST /create with bad date format,Returns 400 with date error,Date format error,Pass,Date validation works
+TC11,Create Book,Create Empty Body,POST /create with empty body,Returns 400 with body error,Missing body error,Pass,Request validation works
+TC12,Create Book,Create Non-JSON,POST /create with text/plain,Returns 400 with JSON error,Content-type error,Pass,Content-type validation
+TC13,Create Book,Create Extra Fields,POST /create with extra author field,Returns 201 ignoring extra or 400,Handles extra fields,Pass,Flexible input handling
+TC14,Create Book,Duplicate Book Name,POST /create with duplicate name,Returns 400 with constraint error,Uniqueness validation,Manual,Requires unique constraint
+TC15,Update Book,Update Valid Book,PUT /update/{id} with valid data,Returns 200 with updated book,Book updated successfully,Fail,ID variable not set
+TC16,Update Book,Update Non-Existing ID,PUT /update/999999,Returns 404 with not found error,Not found error,Pass,ID validation works
+TC17,Update Book,Update Invalid ID,PUT /update/abc,Returns 404 for invalid ID format,Invalid ID handling,Pass,ID format validation
+TC18,Update Book,Update Missing Publisher,PUT /update/{id} without publisher,Returns 400 with field error,Field validation,Fail,ID variable issue
+TC19,Update Book,Update Invalid Date,PUT /update/{id} with bad date,Returns 400 with date error,Date validation,Fail,ID variable issue
+TC20,Update Book,Update DB Down,Stop DB then PUT /update/{id},Returns 503 with DB error,Database error handling,Manual,Requires DB shutdown
+TC21,Delete Book,Delete Valid Book,DELETE /delete/{id},Returns 200 with success message,Book deleted successfully,Fail,ID variable not set
+TC22,Delete Book,Delete Non-Existing ID,DELETE /delete/999999,Returns 404 with not found error,Not found error,Pass,ID validation works
+TC23,Delete Book,Delete Invalid ID,DELETE /delete/abc,Returns 404 for invalid ID format,Invalid ID handling,Pass,ID format validation
+TC24,Delete Book,Delete DB Down,Stop DB then DELETE /delete/{id},Returns 503 with DB error,Database error handling,Manual,Requires DB shutdown
+TC25,Error Handling,DB Connection Failure,Change to invalid DB host,Returns 503 for all operations,Connection error handling,Manual,Requires config change
+TC26,Error Handling,Unhandled Exception,Force server exception,Returns 500 with error details,Generic error handling,Manual,Requires code modification
+TC27,Error Handling,Malformed JSON,POST with malformed JSON,Returns 400 with JSON parse error,JSON validation,Pass,Input validation works
+TC28,Error Handling,Missing Route,GET /unknown,Returns 404 with not found error,Route handling,Pass,Unknown endpoint handling
+TC29,Error Handling,Invalid HTTP Method,PATCH /create,Returns 405 method not allowed,Method validation,Fail,Should return 405
+TC30,API Contract,Content-Type Consistency,Check all responses,All JSON responses have correct headers,Header validation,Pass,Response format consistent
+TC31,Schema Validation,Health Endpoint Schema,Validate /health response structure,Matches predefined schema,Schema compliance,Pass,Response structure valid
+TC32,Schema Validation,Books List Schema,Validate / response structure,Array of book objects with required fields,Schema compliance,Fail,Schema mismatch
+TC33,Schema Validation,Create Response Schema,Validate /create response structure,Created book object structure,Schema compliance,Fail,Schema mismatch
+TC34,Performance,Response Time - Health,GET /health response time,Response under 1000ms,Fast response,Pass,Acceptable performance
+TC35,Performance,Response Time - Get Books,GET / response time,Response under 1000ms,Fast response,Pass,Acceptable performance
+TC36,Performance,Response Time - Create,POST /create response time,Response under 1000ms,Fast response,Pass,Acceptable performance
+TC37,Security,SQL Injection - Name,POST /create with SQL in name field,No SQL injection occurs,Input sanitized,Pass,Protected against injection
+TC38,Security,SQL Injection - Publisher,POST /create with SQL in publisher,No SQL injection occurs,Input sanitized,Pass,Protected against injection
+TC39,Data Validation,Date Range Validation,POST /create with future date,Accepts valid future dates,Date accepted,Pass,Date range handling
+TC40,Data Validation,Cost Range Validation,POST /create with negative cost,Validates cost is positive,Cost validation,Pass,Business rule validation
+TC41,System Integration,Database Transaction,Create book with DB rollback scenario,Transaction integrity maintained,ACID properties,Manual,Requires transaction testing
+TC42,System Integration,Concurrent Operations,Multiple simultaneous creates,Handles concurrent requests properly,Concurrency support,Manual,Load testing required
+TC43,Data Integrity,Foreign Key Constraints,Test with related data scenarios,Maintains referential integrity,Data consistency,Manual,Advanced DB testing
+TC44,Operational,Log File Generation,Perform operations and check logs,Operations logged appropriately,Audit trail,Manual,Log analysis required

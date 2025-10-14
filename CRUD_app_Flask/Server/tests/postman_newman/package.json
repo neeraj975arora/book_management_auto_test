@@ -1,0 +1,23 @@
+{
+  "name": "book-api-tests",
+  "version": "1.0.0",
+  "description": "Comprehensive Newman testing for Flask CRUD API",
+  "scripts": {
+    "test": "./run-newman-tests.sh",
+    "test:enhanced": "./run-newman-tests.sh --enhanced",
+    "report": "bash ../../generate-unified-report.sh",
+    "check-deps": "./check-dependencies.sh"
+  },
+  "dependencies": {
+    "newman": "^6.2.1",
+    "newman-reporter-htmlextra": "^1.23.1"
+  },
+  "keywords": [
+    "newman",
+    "postman",
+    "api-testing",
+    "crud"
+  ],
+  "author": "",
+  "license": "ISC"
+}
