@@ -272,7 +272,7 @@ You can manually test all API endpoints using **Thunder Client** (VS Code extens
       "publisher": "Penguin",
       "name": "Python Programming",
       "date": "2024-01-15",
-      "cost": 299.99
+      "Cost": 299.99
     }
   ]
   ```
@@ -472,3 +472,4 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
