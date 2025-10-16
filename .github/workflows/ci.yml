@@ -40,6 +40,10 @@ jobs:
         run: pip install -r "$REQ_FILE"
         working-directory: ${{ env.BACKEND_DIR }}
 
+      - name: Seed backend database for Playwright tests
+        run: python Playwright_Test_data.py
+        working-directory: ${{ env.BACKEND_DIR }}
+
       - name: Run backend tests and save log
         run: |
           pytest tests/ -v --maxfail=1 --disable-warnings | tee pytest.log
