@@ -10,96 +10,61 @@ jobs:
   test-backend:
     name: Test Backend
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: CRUD_App/CRUD_app_Flask/Server
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Detect repo layout
-        id: detect
-        run: |
-          if [ -d "CRUD_APP/server" ]; then
-            echo "BACKEND_DIR=CRUD_APP/server" >> $GITHUB_ENV
-            echo "FRONTEND_DIR=CRUD_APP/client" >> $GITHUB_ENV
-            echo "REQ_FILE=requirements.txt" >> $GITHUB_ENV
-          elif [ -d "CRUD_app_Flask/Server" ]; then
-            echo "BACKEND_DIR=CRUD_app_Flask/Server" >> $GITHUB_ENV
-            echo "FRONTEND_DIR=CRUD_app_Flask/Client" >> $GITHUB_ENV
-            echo "REQ_FILE=requirements.txt" >> $GITHUB_ENV
-          else
-            echo "Could not detect project layout. Expected either CRUD_APP/* or CRUD_app_Flask/*" >&2
-            exit 1
-          fi
-          echo "Detected BACKEND_DIR=$BACKEND_DIR, FRONTEND_DIR=$FRONTEND_DIR, REQ_FILE=$REQ_FILE"
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install backend dependencies
-        run: pip install -r "$REQ_FILE"
-        working-directory: ${{ env.BACKEND_DIR }}
-
-      - name: Seed backend database for Playwright tests
-        run: python Playwright_Test_data.py
-        working-directory: ${{ env.BACKEND_DIR }}
-
-      - name: Run backend tests and save log
-        run: |
-          pytest tests/ -v --maxfail=1 --disable-warnings | tee pytest.log
-        working-directory: ${{ env.BACKEND_DIR }}
-
-      - name: Upload pytest log
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: pytest-log
-          path: ${{ env.BACKEND_DIR }}/pytest.log
-          retention-days: 30
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install backend dependencies
+      run: |
+        pip install -r requirement.txt
+    
+    - name: Run backend tests
+      run: |
+        python -m pytest tests/ -v
 
   test-frontend:
     name: Test Frontend
     runs-on: ubuntu-latest
-    needs: test-backend
+    defaults:
+      run:
+        working-directory: CRUD_App/CRUD_app_Flask/Client
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Detect repo layout
-        run: |
-          if [ -d "CRUD_APP/client" ]; then
-            echo "FRONTEND_DIR=CRUD_APP/client" >> $GITHUB_ENV
-          elif [ -d "CRUD_app_Flask/Client" ]; then
-            echo "FRONTEND_DIR=CRUD_app_Flask/Client" >> $GITHUB_ENV
-          else
-            echo "Could not detect frontend directory." >&2
-            exit 1
-          fi
-          echo "Detected FRONTEND_DIR=$FRONTEND_DIR"
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: ${{ env.FRONTEND_DIR }}/package-lock.json
-
-      - name: Install frontend dependencies
-        run: npm ci
-        working-directory: ${{ env.FRONTEND_DIR }}
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
-        working-directory: ${{ env.FRONTEND_DIR }}
-
-      - name: Run Playwright tests
-        run: npx playwright test
-        working-directory: ${{ env.FRONTEND_DIR }}
-
-      - name: Upload Playwright report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: ${{ env.FRONTEND_DIR }}/playwright-report/
-          retention-days: 30
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: CRUD_App/CRUD_app_Flask/Client/package-lock.json
+    
+    - name: Install frontend dependencies
+      run: |
+        npm ci
+    
+    - name: Install Playwright browsers
+      run: |
+        npx playwright install --with-deps
+    
+    - name: Run Playwright tests
+      run: |
+        npx playwright test
+    
+    - name: Upload Playwright report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: CRUD_App/CRUD_app_Flask/Client/playwright-report/
+        retention-days: 30
