@@ -20,7 +20,7 @@ jobs:
         ports:
           - 5432:5432
         options: >-
-          --health-cmd pg_isready
+          --health-cmd "pg_isready -U postgres"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -29,7 +29,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Detect repo layout
+      - name: Detect backend/frontend directories
         id: detect
         run: |
           if [ -d "CRUD_APP/server" ]; then
@@ -41,7 +41,7 @@ jobs:
             echo "FRONTEND_DIR=CRUD_app_Flask/Client" >> $GITHUB_ENV
             echo "REQ_FILE=requirements.txt" >> $GITHUB_ENV
           else
-            echo "Could not detect project layout. Expected either CRUD_APP/* or CRUD_app_Flask/*" >&2
+            echo "Could not detect project layout." >&2
             exit 1
           fi
           echo "Detected BACKEND_DIR=$BACKEND_DIR, FRONTEND_DIR=$FRONTEND_DIR, REQ_FILE=$REQ_FILE"
@@ -55,23 +55,22 @@ jobs:
         run: pip install -r "$REQ_FILE"
         working-directory: ${{ env.BACKEND_DIR }}
 
-      - name: Wait for Postgres
-        run: |
-          until pg_isready -h localhost -p 5432; do
-            echo "Waiting for postgres..."
-            sleep 2
-          done
-
-      - name: Seed backend database for Playwright tests
+      - name: Seed backend database
         run: python Playwright_Test_data.py
         working-directory: ${{ env.BACKEND_DIR }}
+        env:
+          PGHOST: localhost
+          PGUSER: postgres
+          PGPASSWORD: password123
+          PGDATABASE: flask_demo
+          PGPORT: 5432
 
-      - name: Run backend tests and save log
+      - name: Run backend tests
         run: |
           pytest tests/ -v --maxfail=1 --disable-warnings | tee pytest.log
         working-directory: ${{ env.BACKEND_DIR }}
 
-      - name: Upload pytest log
+      - name: Upload backend test logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -87,7 +86,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Detect repo layout
+      - name: Detect frontend directory
         run: |
           if [ -d "CRUD_APP/client" ]; then
             echo "FRONTEND_DIR=CRUD_APP/client" >> $GITHUB_ENV
@@ -97,7 +96,6 @@ jobs:
             echo "Could not detect frontend directory." >&2
             exit 1
           fi
-          echo "Detected FRONTEND_DIR=$FRONTEND_DIR"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -114,9 +112,19 @@ jobs:
         run: npx playwright install --with-deps
         working-directory: ${{ env.FRONTEND_DIR }}
 
+      - name: Start backend server
+        run: |
+          export FLASK_APP=${{ env.BACKEND_DIR }}/app.py
+          flask run --host=0.0.0.0 --port=5000 &
+          echo "Waiting 15s for backend to start..."
+          sleep 15
+        working-directory: ${{ env.BACKEND_DIR }}
+
       - name: Run Playwright tests
         run: npx playwright test
         working-directory: ${{ env.FRONTEND_DIR }}
+        env:
+          VITE_API_URL: http://localhost:5000
 
       - name: Upload Playwright report
         if: always()
