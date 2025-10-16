@@ -40,18 +40,17 @@ jobs:
         run: pip install -r "$REQ_FILE"
         working-directory: ${{ env.BACKEND_DIR }}
 
-      - name: Run backend tests with HTML report
+      - name: Run backend tests and save log
         run: |
-          mkdir -p reports
-          pytest tests/ -v --maxfail=1 --disable-warnings --html=reports/report.html
+          pytest tests/ -v --maxfail=1 --disable-warnings | tee pytest.log
         working-directory: ${{ env.BACKEND_DIR }}
 
-      - name: Upload pytest HTML report
+      - name: Upload pytest log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: pytest-report
-          path: ${{ env.BACKEND_DIR }}/reports/
+          name: pytest-log
+          path: ${{ env.BACKEND_DIR }}/pytest.log
           retention-days: 30
 
   test-frontend:
