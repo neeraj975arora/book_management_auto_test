@@ -28,10 +28,9 @@ swagger = Swagger(app, template=swagger_template)
 # --- Database configuration ---
 db_config = {
     'host': 'localhost',
-    'port': 5433,               
     'user': 'postgres',
-    'password': 'root@root123',
-    'dbname': 'CRUD_flask'
+    'password': 'password123',
+    'dbname': 'flask_demo'
 }
 
 # --- Utility: Database connection ---
