@@ -151,12 +151,17 @@ jobs:
 
       - name: Start backend server
         run: |
-          export FLASK_APP=${{ env.BACKEND_DIR }}/app.py
-          flask run --host=0.0.0.0 --port=5000 &
+          export FLASK_APP=app.py
+          export PGHOST=localhost
+          export PGUSER=postgres
+          export PGPASSWORD=password123
+          export PGDATABASE=flask_demo
+          export PGPORT=5432
+          nohup python -m flask run --host=0.0.0.0 --port=5000 > flask.log 2>&1 &
           echo "Waiting for backend to become healthy..."
-          for i in {1..30}; do
-            if curl -sSf http://localhost:5000/ > /dev/null; then
-              echo "Backend is up"; break; fi; echo "...waiting"; sleep 2; done
+          for i in {1..60}; do
+            if curl -sS http://localhost:5000/ > /dev/null 2>&1; then echo "Backend is up"; break; fi; echo "...waiting"; sleep 2; done
+          echo "--- Flask startup log (tail) ---" && tail -n 100 flask.log || true
         working-directory: ${{ env.BACKEND_DIR }}
 
       - name: Run Playwright tests
