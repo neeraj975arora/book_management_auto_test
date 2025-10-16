@@ -10,6 +10,21 @@ jobs:
   test-backend:
     name: Test Backend
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password123
+          POSTGRES_DB: flask_demo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -39,6 +54,13 @@ jobs:
       - name: Install backend dependencies
         run: pip install -r "$REQ_FILE"
         working-directory: ${{ env.BACKEND_DIR }}
+
+      - name: Wait for Postgres
+        run: |
+          until pg_isready -h localhost -p 5432; do
+            echo "Waiting for postgres..."
+            sleep 2
+          done
 
       - name: Seed backend database for Playwright tests
         run: python Playwright_Test_data.py
