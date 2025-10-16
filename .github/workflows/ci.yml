@@ -24,7 +24,7 @@ jobs:
           elif [ -d "CRUD_app_Flask/Server" ]; then
             echo "BACKEND_DIR=CRUD_app_Flask/Server" >> $GITHUB_ENV
             echo "FRONTEND_DIR=CRUD_app_Flask/Client" >> $GITHUB_ENV
-            echo "REQ_FILE=requirement.txt" >> $GITHUB_ENV
+            echo "REQ_FILE=requirements.txt" >> $GITHUB_ENV
           else
             echo "Could not detect project layout. Expected either CRUD_APP/* or CRUD_app_Flask/*" >&2
             exit 1
@@ -40,9 +40,19 @@ jobs:
         run: pip install -r "$REQ_FILE"
         working-directory: ${{ env.BACKEND_DIR }}
 
-      - name: Run backend tests
-        run: python -m pytest tests/ -v
+      - name: Run backend tests with HTML report
+        run: |
+          mkdir -p reports
+          pytest tests/ -v --maxfail=1 --disable-warnings --html=reports/report.html
         working-directory: ${{ env.BACKEND_DIR }}
+
+      - name: Upload pytest HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-report
+          path: ${{ env.BACKEND_DIR }}/reports/
+          retention-days: 30
 
   test-frontend:
     name: Test Frontend
