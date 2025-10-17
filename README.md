@@ -151,21 +151,22 @@ sudo -u postgres psql -c "ALTER USER postgres PASSWORD '123456';"
 💡 Tip:
 Replace '123456' with your own secure password.
 You’ll need to update this password in your Flask app’s database configuration:
-
+```bash
 db_config = {
     'host': 'localhost',
     'user': 'postgres',
     'password': '123456',  # Update this if you change it
     'dbname': 'demo_flask'
 }
+```
 
-4. Verify the database setup:
-
+#### 4. Verify the database setup:
+```bash
 sudo -u postgres psql
 \l   # List all databases
 \c demo_flask   # Connect to your app's database
 \dt  # List all tables
-
+```
 
 If you see the book table listed, your database has been initialized successfully ✅
 
@@ -513,5 +514,6 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
