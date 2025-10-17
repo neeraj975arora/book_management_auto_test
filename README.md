@@ -128,20 +128,23 @@ The `requirements.txt` file contains all necessary Python packages:
    );
    ```
 
-🧩 4. **How to Initialize PostgreSQL Database**
+### 🧩 4. How to Initialize PostgreSQL Database
 
 Before running the Flask backend, you need to set up your PostgreSQL database and user credentials.
 
-1. Copy the setup SQL file to the temporary directory:
+#### Step 1: Copy the SQL setup file
+```bash
 sudo cp setup_database.sql /tmp
+```
 
-2. Run the SQL script as the PostgreSQL user:
+#### Step 2. Run the SQL script as the PostgreSQL user:
+```bash
 sudo -u postgres psql -f /tmp/setup_database.sql
-
+```
 
 This will create the required database and tables defined inside your setup_database.sql file.
 
-3. (Optional) Set a password for the PostgreSQL postgres user:
+#### Step 3. (Optional) Set a password for the PostgreSQL postgres user:
 sudo -u postgres psql -c "ALTER USER postgres PASSWORD '123456';"
 
 
@@ -156,7 +159,7 @@ db_config = {
     'dbname': 'demo_flask'
 }
 
-4. Verify the database setup
+4. Verify the database setup:
 
 sudo -u postgres psql
 \l   # List all databases
@@ -510,4 +513,5 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
