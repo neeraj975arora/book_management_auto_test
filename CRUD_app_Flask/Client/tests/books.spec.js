@@ -15,7 +15,7 @@ test.describe('Books List Page', () => {
     await expect(createButton).toHaveAttribute('href', '/create');
     
     // Check table headers
-    const headers = ['Publisher', 'Book', 'Date', 'Cost', 'Actions'];
+    const headers = ['Publisher', 'Book', 'Date', 'cost', 'Actions'];
     for (const header of headers) {
       await expect(page.locator(`th:has-text("${header}")`)).toBeVisible();
     }

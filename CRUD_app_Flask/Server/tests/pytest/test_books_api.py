@@ -30,7 +30,7 @@ def test_create_valid_book(client):
         "publisher": "O'Reilly",
         "name": "Flask101",
         "date": "2025-01-01",
-        "Cost": 49.99
+        "cost": 49.99
     }
     response = client.post("/create", json=payload)
     data = response.get_json()
@@ -42,7 +42,7 @@ def test_create_missing_field(client):
     payload = {
         "name": "Flask101",
         "date": "2025-01-01",
-        "Cost": 49.99
+        "cost": 49.99
     }
     response = client.post("/create", json=payload)
     assert response.status_code == 400
@@ -54,7 +54,7 @@ def test_create_invalid_cost(client):
         "publisher": "Packt",
         "name": "Flask",
         "date": "2025-01-01",
-        "Cost": "abc"
+        "cost": "abc"
     }
     response = client.post("/create", json=payload)
     assert response.status_code == 400
@@ -66,7 +66,7 @@ def test_create_invalid_date(client):
         "publisher": "Packt",
         "name": "Flask",
         "date": "32-13-2025",
-        "Cost": 39.99
+        "cost": 39.99
     }
     response = client.post("/create", json=payload)
     assert response.status_code == 400
@@ -89,7 +89,7 @@ def test_update_valid_book(client, create_sample_book):
         "publisher": "UpdatePub",
         "name": "UpdatedBook",
         "date": "2025-12-12",
-        "Cost": 60.0
+        "cost": 60.0
     }
     response = client.put(f"/update/{book_id}", json=payload)
     assert response.status_code == 200
@@ -101,7 +101,7 @@ def test_update_nonexistent_book(client):
         "publisher": "X",
         "name": "Y",
         "date": "2025-01-01",
-        "Cost": 10
+        "cost": 10
     }
     response = client.put("/update/99999", json=payload)
     assert response.status_code == 404

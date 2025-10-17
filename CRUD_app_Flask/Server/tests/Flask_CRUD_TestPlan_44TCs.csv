@@ -7,7 +7,7 @@ TC05,CRUD Operations,Get All Books - Empty,GET / with empty table,Returns 200 wi
 TC06,CRUD Operations,Get All Books - With Data,GET / with books in table,Returns 200 with book array,Returns book list,Pass,Data retrieval works
 TC07,Create Book,Create Valid Book,POST /create with valid JSON,Returns 201 with book data,Book created successfully,Pass,Valid creation flowUse a unified test-reporting framework to merge Newman automated results.
 TC08,Create Book,Create Missing Publisher,POST /create without publisher,Returns 400 with error message,Missing field error,Pass,Field validation works
-TC09,Create Book,Create Invalid Cost,POST /create with non-numeric cost,Returns 400 with cost error,Invalid cost error,Pass,Type validation works
+TC09,Create Book,Create Invalid cost,POST /create with non-numeric cost,Returns 400 with cost error,Invalid cost error,Pass,Type validation works
 TC10,Create Book,Create Invalid Date,POST /create with bad date format,Returns 400 with date error,Date format error,Pass,Date validation works
 TC11,Create Book,Create Empty Body,POST /create with empty body,Returns 400 with body error,Missing body error,Pass,Request validation works
 TC12,Create Book,Create Non-JSON,POST /create with text/plain,Returns 400 with JSON error,Content-type error,Pass,Content-type validation
@@ -38,7 +38,7 @@ TC36,Performance,Response Time - Create,POST /create response time,Response unde
 TC37,Security,SQL Injection - Name,POST /create with SQL in name field,No SQL injection occurs,Input sanitized,Pass,Protected against injection
 TC38,Security,SQL Injection - Publisher,POST /create with SQL in publisher,No SQL injection occurs,Input sanitized,Pass,Protected against injection
 TC39,Data Validation,Date Range Validation,POST /create with future date,Accepts valid future dates,Date accepted,Pass,Date range handling
-TC40,Data Validation,Cost Range Validation,POST /create with negative cost,Validates cost is positive,Cost validation,Pass,Business rule validation
+TC40,Data Validation,cost Range Validation,POST /create with negative cost,Validates cost is positive,cost validation,Pass,Business rule validation
 TC41,System Integration,Database Transaction,Create book with DB rollback scenario,Transaction integrity maintained,ACID properties,Manual,Requires transaction testing
 TC42,System Integration,Concurrent Operations,Multiple simultaneous creates,Handles concurrent requests properly,Concurrency support,Manual,Load testing required
 TC43,Data Integrity,Foreign Key Constraints,Test with related data scenarios,Maintains referential integrity,Data consistency,Manual,Advanced DB testing

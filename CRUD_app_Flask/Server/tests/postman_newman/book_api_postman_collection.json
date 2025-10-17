@@ -278,7 +278,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"Flask101\", \"date\": \"2025-01-01\", \"Cost\": 49.99}"
+              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"Flask101\", \"date\": \"2025-01-01\", \"cost\": 49.99}"
             },
             "url": {
               "raw": "{{base_url}}/create",
@@ -316,7 +316,7 @@
                   "    pm.expect(json).to.have.property('publisher');",
                   "    pm.expect(json).to.have.property('name');",
                   "    pm.expect(json).to.have.property('date');",
-                  "    pm.expect(json).to.have.property('Cost');",
+                  "    pm.expect(json).to.have.property('cost');",
                   "});",
                   "",
                   "// If server returns an id, save it to an environment variable for subsequent tests",
@@ -341,7 +341,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"name\": \"Flask101\", \"date\": \"2025-01-01\", \"Cost\": 49.99}"
+              "raw": "{\"name\": \"Flask101\", \"date\": \"2025-01-01\", \"cost\": 49.99}"
             },
             "url": {
               "raw": "{{base_url}}/create",
@@ -385,7 +385,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"2025-01-01\", \"Cost\": \"abc\"}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"2025-01-01\", \"cost\": \"abc\"}"
             },
             "url": {
               "raw": "{{base_url}}/create",
@@ -396,7 +396,7 @@
                 "create"
               ]
             },
-            "description": "Cost as string should validate and return 400."
+            "description": "cost as string should validate and return 400."
           },
           "event": [
             {
@@ -428,7 +428,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"32-13-2025\", \"Cost\": 39.99}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"32-13-2025\", \"cost\": 39.99}"
             },
             "url": {
               "raw": "{{base_url}}/create",
@@ -551,7 +551,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"2025-01-01\", \"Cost\": 39.99, \"author\": \"xyz\"}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"Flask\", \"date\": \"2025-01-01\", \"cost\": 39.99, \"author\": \"xyz\"}"
             },
             "url": {
               "raw": "{{base_url}}/create",
@@ -597,7 +597,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"FLASK_DUPLICATE_TEST\", \"date\": \"2025-01-01\", \"Cost\": 39.99}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"FLASK_DUPLICATE_TEST\", \"date\": \"2025-01-01\", \"cost\": 39.99}"
             },
             "url": {
               "raw": "{{base_url}}/create",
@@ -646,7 +646,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"Flask101-Updated\", \"date\": \"2025-02-02\", \"Cost\": 59.99}"
+              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"Flask101-Updated\", \"date\": \"2025-02-02\", \"cost\": 59.99}"
             },
             "url": {
               "raw": "{{base_url}}/update/{{created_book_id}}",
@@ -686,7 +686,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"NoSuchBook\", \"date\": \"2025-01-01\", \"Cost\": 29.99}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"NoSuchBook\", \"date\": \"2025-01-01\", \"cost\": 29.99}"
             },
             "url": {
               "raw": "{{base_url}}/update/{{non_existing_id}}",
@@ -725,7 +725,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"InvalidIDTest\", \"date\": \"2025-01-01\", \"Cost\": 29.99}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"InvalidIDTest\", \"date\": \"2025-01-01\", \"cost\": 29.99}"
             },
             "url": {
               "raw": "{{base_url}}/update/abc",
@@ -802,7 +802,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"FlaskBadDate\", \"date\": \"31-02-2025\", \"Cost\": 25.0}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"FlaskBadDate\", \"date\": \"31-02-2025\", \"cost\": 25.0}"
             },
             "url": {
               "raw": "{{base_url}}/update/{{created_book_id}}",
@@ -841,7 +841,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"Packt\", \"name\": \"WhileDBDown\", \"date\": \"2025-01-01\", \"Cost\": 1.0}"
+              "raw": "{\"publisher\": \"Packt\", \"name\": \"WhileDBDown\", \"date\": \"2025-01-01\", \"cost\": 1.0}"
             },
             "url": {
               "raw": "{{base_url}}/update/{{created_book_id}}",
@@ -1264,9 +1264,9 @@
                   "      'publisher': { 'type': 'string' },",
                   "      'name': { 'type': 'string' },",
                   "      'date': { 'type': 'string' },",
-                  "      'Cost': { 'type': ['number','integer'] }",
+                  "      'cost': { 'type': ['number','integer'] }",
                   "    },",
-                  "    'required': ['publisher','name','date','Cost']",
+                  "    'required': ['publisher','name','date','cost']",
                   "  }",
                   "};",
                   "pm.test('Books response matches schema', function() {",
@@ -1291,7 +1291,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"SchemaTestBook\", \"date\": \"2025-01-01\", \"Cost\": 9.99}"
+              "raw": "{\"publisher\": \"O'Reilly\", \"name\": \"SchemaTestBook\", \"date\": \"2025-01-01\", \"cost\": 9.99}"
             },
             "url": {
               "raw": "{{base_url}}/create",
@@ -1317,9 +1317,9 @@
                   "    'publisher': { 'type': 'string' },",
                   "    'name': { 'type': 'string' },",
                   "    'date': { 'type': 'string' },",
-                  "    'Cost': { 'type': ['number','integer'] }",
+                  "    'cost': { 'type': ['number','integer'] }",
                   "  },",
-                  "  'required': ['publisher','name','date','Cost']",
+                  "  'required': ['publisher','name','date','cost']",
                   "};",
                   "pm.test('Create response matches book schema', function() {",
                   "  try { var json = pm.response.json(); } catch(e) { pm.expect.fail('Response not JSON'); }",

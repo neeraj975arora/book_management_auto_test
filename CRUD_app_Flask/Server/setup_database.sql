@@ -13,11 +13,11 @@ CREATE TABLE book (
     publisher VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
     date DATE NOT NULL,
-    Cost DECIMAL(10, 2) NOT NULL
+    cost DECIMAL(10, 2) NOT NULL
 );
 
 -- Insert sample data for testing
-INSERT INTO book (publisher, name, date, Cost) VALUES
+INSERT INTO book (publisher, name, date, cost) VALUES
 ('Penguin Random House', 'Python Crash Course', '2023-01-15', 299.99),
 ('O''Reilly Media', 'Learning Flask', '2023-06-20', 399.50),
 ('Manning Publications', 'Flask Web Development', '2024-03-10', 449.00);

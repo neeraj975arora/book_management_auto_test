@@ -26,6 +26,12 @@ swagger_template = {
 swagger = Swagger(app, template=swagger_template)
 
 # --- Database configuration ---
+# db_config = {
+#     'host': 'localhost',
+#     'user': 'postgres',
+#     'password': '123456',
+#     'dbname': 'CRUD_flask'
+# }
 db_config = {
     'host': 'localhost',
     'user': 'postgres',
@@ -62,7 +68,7 @@ def generic_error(e):
 def validate_book_data(data):
     if not data:
         return "Missing request body"
-    required_fields = ['publisher', 'name', 'date', 'Cost']
+    required_fields = ['publisher', 'name', 'date', 'cost']
     for field in required_fields:
         if field not in data:
             return f"Missing field: {field}"
@@ -71,7 +77,7 @@ def validate_book_data(data):
     except ValueError:
         return "Invalid date format. Use YYYY-MM-DD."
     try:
-        float(data['Cost'])
+        float(data['cost'])
     except (ValueError, TypeError):
         return "Invalid cost. Must be a numeric value."
     return None
@@ -101,7 +107,7 @@ def get_books():
               date:
                 type: string
                 format: date
-              Cost:
+              cost:
                 type: number
       503:
         description: Database unavailable
@@ -139,7 +145,7 @@ def create_books():
             - publisher
             - name
             - date
-            - Cost
+            - cost
           properties:
             publisher:
               type: string
@@ -149,7 +155,7 @@ def create_books():
               type: string
               format: date
               example: "2025-10-09"
-            Cost:
+            cost:
               type: number
               example: 199.99
     responses:
@@ -171,8 +177,8 @@ def create_books():
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute(
-            "INSERT INTO book (publisher, name, date, Cost) VALUES (%s, %s, %s, %s)",
-            (new_book['publisher'], new_book['name'], new_book['date'], new_book['Cost'])
+            "INSERT INTO book (publisher, name, date, cost) VALUES (%s, %s, %s, %s)",
+            (new_book['publisher'], new_book['name'], new_book['date'], new_book['cost'])
         )
         connection.commit()
         return jsonify({"message": "Book created successfully", "data": new_book}), 201
@@ -214,7 +220,7 @@ def update_book(id):
             date:
               type: string
               format: date
-            Cost:
+            cost:
               type: number
     responses:
       200:
@@ -237,8 +243,8 @@ def update_book(id):
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute(
-            "UPDATE book SET publisher=%s, name=%s, date=%s, Cost=%s WHERE id=%s",
-            (updated_book['publisher'], updated_book['name'], updated_book['date'], updated_book['Cost'], id)
+            "UPDATE book SET publisher=%s, name=%s, date=%s, cost=%s WHERE id=%s",
+            (updated_book['publisher'], updated_book['name'], updated_book['date'], updated_book['cost'], id)
         )
         if cursor.rowcount == 0:
             return jsonify({"error": "Book not found"}), 404

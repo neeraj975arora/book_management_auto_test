@@ -7,7 +7,7 @@ const CreateBook = () => { // defined the functional component named createbook
         publisher:"",
         name:"",
         date:'',
-        Cost:''
+        cost:''
     })
     const navigate = useNavigate() // navigate to the home page
     const handleSubmit= (e) =>{    // event handler to handle form submission
@@ -53,13 +53,13 @@ const CreateBook = () => { // defined the functional component named createbook
                     />
                 </div>
                 <div class="mb-3">
-                    <label htmlFor="Cost" 
-                    class="form-label">Cost:
+                    <label htmlFor="cost" 
+                    class="form-label">cost:
                     </label>
                     <input type="text" 
                      class="form-control"
                     name="name" 
-                    onChange={(e)=> setValues({...values, Cost: e.target.value})}
+                    onChange={(e)=> setValues({...values, cost: e.target.value})}
                     />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>

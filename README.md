@@ -128,7 +128,45 @@ The `requirements.txt` file contains all necessary Python packages:
    );
    ```
 
-4. **Configure the database connection:**
+🧩 4. **How to Initialize PostgreSQL Database**
+
+Before running the Flask backend, you need to set up your PostgreSQL database and user credentials.
+
+1. Copy the setup SQL file to the temporary directory:
+sudo cp setup_database.sql /tmp
+
+2. Run the SQL script as the PostgreSQL user:
+sudo -u postgres psql -f /tmp/setup_database.sql
+
+
+This will create the required database and tables defined inside your setup_database.sql file.
+
+3. (Optional) Set a password for the PostgreSQL postgres user:
+sudo -u postgres psql -c "ALTER USER postgres PASSWORD '123456';"
+
+
+💡 Tip:
+Replace '123456' with your own secure password.
+You’ll need to update this password in your Flask app’s database configuration:
+
+db_config = {
+    'host': 'localhost',
+    'user': 'postgres',
+    'password': '123456',  # Update this if you change it
+    'dbname': 'demo_flask'
+}
+
+4. Verify the database setup
+
+sudo -u postgres psql
+\l   # List all databases
+\c demo_flask   # Connect to your app's database
+\dt  # List all tables
+
+
+If you see the book table listed, your database has been initialized successfully ✅
+
+5. **Configure the database connection:**
 
    Open `app.py` and update the `db_config` object with your PostgreSQL credentials:
 
@@ -141,7 +179,7 @@ The `requirements.txt` file contains all necessary Python packages:
    }
    ```
 
-5. **Run the Flask application:**
+6. **Run the Flask application:**
 
    ```bash
    python app.py
@@ -272,7 +310,7 @@ You can manually test all API endpoints using **Thunder Client** (VS Code extens
       "publisher": "Penguin",
       "name": "Python Programming",
       "date": "2024-01-15",
-      "Cost": 299.99
+      "cost": 299.99
     }
   ]
   ```
@@ -290,7 +328,7 @@ You can manually test all API endpoints using **Thunder Client** (VS Code extens
     "publisher": "O'Reilly",
     "name": "Learning Flask",
     "date": "2024-10-11",
-    "Cost": 399.99
+    "cost": 399.99
   }
   ```
 - **Expected Response:** 
@@ -301,7 +339,7 @@ You can manually test all API endpoints using **Thunder Client** (VS Code extens
       "publisher": "O'Reilly",
       "name": "Learning Flask",
       "date": "2024-10-11",
-      "Cost": 399.99
+      "cost": 399.99
     }
   }
   ```
@@ -319,7 +357,7 @@ You can manually test all API endpoints using **Thunder Client** (VS Code extens
     "publisher": "Updated Publisher",
     "name": "Updated Book Name",
     "date": "2024-12-01",
-    "Cost": 499.99
+    "cost": 499.99
   }
   ```
 - **Expected Response:** 
@@ -330,7 +368,7 @@ You can manually test all API endpoints using **Thunder Client** (VS Code extens
       "publisher": "Updated Publisher",
       "name": "Updated Book Name",
       "date": "2024-12-01",
-      "Cost": 499.99
+      "cost": 499.99
     }
   }
   ```

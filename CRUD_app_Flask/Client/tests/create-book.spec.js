@@ -38,9 +38,9 @@ test.describe('Create Book Page', () => {
         ]
       },
       { 
-        label: 'Cost:',
+        label: 'cost:',
         selectors: [
-          'label:has-text("Cost:") + input',
+          'label:has-text("cost:") + input',
           'input.form-control', // Fallback to class-based selector
           'input[type="text"]' // Last fallback
         ]
@@ -59,10 +59,10 @@ test.describe('Create Book Page', () => {
         const inputCount = await input.count();
         
         if (inputCount > 0) {
-          // For Cost field, we need to find the correct input among multiple
-          if (field.label === 'Cost:') {
-            // Find the input that comes after the Cost label
-            const costInput = page.locator('label:has-text("Cost:") + input');
+          // For cost field, we need to find the correct input among multiple
+          if (field.label === 'cost:') {
+            // Find the input that comes after the cost label
+            const costInput = page.locator('label:has-text("cost:") + input');
             if (await costInput.count() > 0) {
               await expect(costInput).toBeVisible();
               inputFound = true;
@@ -106,8 +106,8 @@ test.describe('Create Book Page', () => {
     // Fill date - find the date input (there's only one date input)
     await page.locator('input[type="date"]').fill(testBook.date);
     
-    // Fill cost - use the input that comes after the Cost label
-    const costLabel = page.locator('label:has-text("Cost:")');
+    // Fill cost - use the input that comes after the cost label
+    const costLabel = page.locator('label:has-text("cost:")');
     const costInput = costLabel.locator('xpath=following-sibling::input[1]');
     await costInput.fill(testBook.cost);
     
@@ -145,7 +145,7 @@ test.describe('Create Book Page', () => {
       // Date (third input - date type)
       await inputs.nth(2).fill(testBook.date);
       
-      // Cost (fourth input)
+      // cost (fourth input)
       await inputs.nth(3).fill(testBook.cost);
     }
     
@@ -212,8 +212,8 @@ test.describe('Create Book Page', () => {
   // Test cost field - multiple strategies
   let costInput;
   
-  // Strategy 1: Find input after Cost label
-  const costLabel = page.locator('label:has-text("Cost:")');
+  // Strategy 1: Find input after cost label
+  const costLabel = page.locator('label:has-text("cost:")');
   costInput = costLabel.locator('xpath=following-sibling::input[1]');
   
   if (await costInput.count() === 0) {
@@ -225,7 +225,7 @@ test.describe('Create Book Page', () => {
     await costInput.fill(testValues.cost);
     await expect(costInput).toHaveValue(testValues.cost);
   } else {
-    console.log('Cost input not found with any strategy');
+    console.log('cost input not found with any strategy');
   }
 });
 });

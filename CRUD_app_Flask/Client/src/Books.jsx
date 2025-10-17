@@ -42,7 +42,7 @@ const Books = () => {
                             <th scope='col'>Publisher</th>
                             <th scope='col'>Book</th>
                             <th scope='col'>Date</th>
-                            <th scope='col'>Cost</th>
+                            <th scope='col'>cost</th>
                             <th scope='col'>Actions</th>
                         </tr>
                     </thead>
