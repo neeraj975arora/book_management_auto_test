@@ -145,8 +145,9 @@ sudo -u postgres psql -f /tmp/setup_database.sql
 This will create the required database and tables defined inside your setup_database.sql file.
 
 #### Step 3. (Optional) Set a password for the PostgreSQL postgres user:
+```bash
 sudo -u postgres psql -c "ALTER USER postgres PASSWORD '123456';"
-
+```
 
 💡 Tip:
 Replace '123456' with your own secure password.
@@ -514,6 +515,7 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
 
