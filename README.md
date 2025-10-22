@@ -4,28 +4,38 @@
 
 This is a simple Flask CRUD application that manages a list of books stored in a PostgreSQL database. The app allows users to create, read, update, and delete books through a React frontend. It also provides interactive API documentation using **Swagger UI** powered by the **Flasgger** module. 
 
-## Issues resolved/Lessons Learned-
-a) Mixed-case field names (SQLAlchemy & PostgreSQL 16.10)
-PostgreSQL requires mixed-case column names (e.g., Cost) to be enclosed in double quotes ("Cost"). SQLAlchemy ORM doesn’t auto-handle this quoting, causing query failures.
-Fix: Renamed all mixed-case fields to lowercase (e.g., Cost → cost) for cross-platform compatibility.
 
-b) Running setup_database.sql on Linux
-The postgres Linux user (created without a home directory) can only access files in open directories.
-Fix: Copy script to /tmp and set open permissions before running:
+## Issues Resolved
 
+**a) Mixed-case field names (SQLAlchemy & PostgreSQL 16.10)**
+PostgreSQL requires mixed-case column names (e.g., `Cost`) to be enclosed in double quotes (`"Cost"`). SQLAlchemy ORM doesn’t auto-handle this quoting, causing query failures.
+**Fix:** Renamed all mixed-case fields to lowercase (e.g., `Cost` → `cost`) for cross-platform compatibility.
+
+---
+
+**b) Running `setup_database.sql` on Linux**
+The `postgres` Linux user (created without a home directory) can only access files in open directories.
+**Fix:** Copy script to `/tmp` and set open permissions before running:
+
+```bash
 sudo cp setup_database.sql /tmp/
 sudo chmod 777 /tmp/setup_database.sql
 sudo -u postgres psql -f /tmp/setup_database.sql
+```
 
+---
 
-c) Password for postgres DB user
-By default, PostgreSQL installs postgres without a password, blocking authenticated access.
-Fix:
+**c) Password for `postgres` DB user**
+By default, PostgreSQL installs `postgres` without a password, blocking authenticated access.
+**Fix:**
 
+```bash
 sudo -u postgres psql -c "ALTER USER postgres PASSWORD '123456';"
-
+```
 
 Enables password-based login for SQLAlchemy and admin tools.
+
+
 ## Project Structure
 
 ```
@@ -537,6 +547,7 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
 
