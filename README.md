@@ -136,12 +136,15 @@ The `requirements.txt` file contains all necessary Python packages:
    pip install -r requirements.txt
    ```
 
-   **(Optional) Alternative manual installation:**
+ 3.  **Downloading PostgreSQL and setup password for PostgreSQL**
    ```bash
-   pip install Flask Flask-CORS psycopg2-binary flasgger pytest pandas Jinja2
+  apt install postgresql
+  sudo -i -u postgres -psql -ALTER USER postgres WITH PASSWORD 'yourpassword'; -\q
    ```
-
-3. **Database Setup:**
+  ** Switch to PostgreSQL user **
+  ```bash
+  sudo -i -u postgres -psql
+    ```
 
    **Create a database in PostgreSQL:**
 
@@ -547,6 +550,7 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
 
