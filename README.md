@@ -117,7 +117,7 @@ The `requirements.txt` file contains all necessary Python packages:
 1. **Navigate to the server directory:**
 
    ```bash
-   cd server
+   cd CRUD_APP/server
    ```
 
 2. **Create and activate virtual environment:**
@@ -551,6 +551,7 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
 
