@@ -139,7 +139,6 @@ The `requirements.txt` file contains all necessary Python packages:
  3.  **Downloading PostgreSQL and setup password for PostgreSQL**
    ```bash
   apt install postgresql
-  sudo -i -u postgres -psql -ALTER USER postgres WITH PASSWORD 'yourpassword'; -\q
    ```
   ** Switch to PostgreSQL user **
   ```bash
@@ -551,6 +550,7 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
 
