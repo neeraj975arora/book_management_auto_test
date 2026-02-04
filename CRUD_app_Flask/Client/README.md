@@ -22,7 +22,7 @@ sudo apt update; sudo apt upgrade; sudo apt install curl
 ## to download specific version of nodejs
 
 ## Install Node.js 
--curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash -
+-curl -fsSL https://deb.nodesource.com/setup_21.x | sudo -E bash - && sudo apt install -y nodejs
 -sudo apt install -y nodejs
 
 ## Verify Node.js installation:(you got the version 21.xx)
@@ -53,6 +53,7 @@ sudo apt update; sudo apt upgrade; sudo apt install curl
 **Read:** View the list of books.
 **Update:** Edit the details of a book.
 **Delete:** Remove a book from the database.
+
 
 
 
