@@ -72,7 +72,7 @@ Using a virtual environment isolates your Python dependencies and avoids conflic
 
 ```bash
 # Create virtual environment
-python -m venv venv
+python3 -m venv venv
 
 # Activate virtual environment
 # On Linux/Mac:
@@ -551,6 +551,7 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
 
