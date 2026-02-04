@@ -144,6 +144,7 @@ The `requirements.txt` file contains all necessary Python packages:
   ** Switch to PostgreSQL user **
   ```bash
   sudo -i -u postgres -psql
+  psql
     ```
 
    **Create a database in PostgreSQL:**
@@ -550,6 +551,7 @@ The project includes Postman collection for automated API testing:
 ## License
 
 This project is for educational purposes.
+
 
 
 
