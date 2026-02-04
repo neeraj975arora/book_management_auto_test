@@ -18,9 +18,7 @@ Follow these steps to install and configure your development environment on **Ub
 Make sure your system is up to date.
  
 # bash
-sudo apt update
-sudo apt upgrade
-sudo apt install curl
+sudo apt update; sudo apt upgrade; sudo apt install curl
 ## to download specific version of nodejs
 
 ## Install Node.js 
@@ -55,6 +53,7 @@ sudo apt install curl
 **Read:** View the list of books.
 **Update:** Edit the details of a book.
 **Delete:** Remove a book from the database.
+
 
 
 
